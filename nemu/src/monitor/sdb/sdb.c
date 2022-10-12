@@ -86,9 +86,8 @@ void sdb_mainloop() {
     cmd_c(NULL);
     return;
   }
-  printf("hello ???");
+
   for (char *str; (str = rl_gets()) != NULL; ) {
-    
     char *str_end = str + strlen(str);
 
     /* extract the first token as the command */

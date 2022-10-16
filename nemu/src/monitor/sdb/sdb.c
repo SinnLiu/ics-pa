@@ -41,7 +41,12 @@ static int cmd_q(char *args) {
 static int cmd_help(char *args);
 
 static int cmd_info(char *args) {
-  isa_reg_display();
+  
+  char *arg = strtok(NULL, " ");
+  if (arg == NULL) return 0;
+  else if (0 == strcmp(arg, "r")) isa_reg_display();
+  else if (0 == strcmp(arg, "w"))  {}
+  else printf("Error in cmd input\n");
   return 0;
 }
 

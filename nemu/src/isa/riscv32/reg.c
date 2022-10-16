@@ -9,6 +9,15 @@ const char *regs[] = {
 };
 
 void isa_reg_display() {
+  printf("%s: %#010x\n","pc",cpu.pc);
+
+  for(int idx = 0 ; idx < 32/4 ; idx ++) {
+    for(int col = 0 ; col < 4 ; col++) {
+      const char *name = reg_name(idx*col, 0);
+      printf("%s: %#010x\t|\t",name,cpu.gpr[idx*col]._32);
+    }
+    printf("\n");
+  }
 }
 
 word_t isa_reg_str2val(const char *s, bool *success) {

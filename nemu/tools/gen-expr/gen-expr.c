@@ -17,7 +17,8 @@ static char *code_format =
 "}";
 
 static void gen_rand_expr() {
-  buf[0] = '\0';
+  buf[0] = '1';
+  buf[1] = '\0';
 }
 
 int main(int argc, char *argv[]) {
@@ -45,7 +46,8 @@ int main(int argc, char *argv[]) {
     assert(fp != NULL);
 
     int result;
-    fscanf(fp, "%d", &result);
+    int ss = fscanf(fp, "%d", &result);
+    if(ss != 1) printf("???\n");
     pclose(fp);
 
     printf("%u %s\n", result, buf);

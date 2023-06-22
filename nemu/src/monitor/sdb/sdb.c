@@ -50,6 +50,28 @@ static int cmd_info(char *args) {
   return 0;
 }
 
+static int cmd_si(char *args) {
+  char *arg = strtok(NULL, " ");
+  int step;
+  if( arg == NULL) step = 1;
+  else sscanf(arg,"%d",&step);
+  cpu_exec(step);
+  return 0;
+}
+
+static int cmd_e(char *args) {
+  // char *arg = strtok(NULL, " ");
+  bool success;
+  word_t res = 0;
+  if(args == NULL) printf("Please input the express\n");
+  else res = expr(args, &success);
+  if(success)
+    printf("%d\n",res);
+  else
+    printf("The express is error pls check\n");
+  return 0;
+}
+
 static struct {
   const char *name;
   const char *description;
@@ -61,6 +83,8 @@ static struct {
 
   /* TODO: Add more commands */
   {"info", "Display infomations", cmd_info},
+  {"si", "Single step exe", cmd_si},
+  {"e", "Express", cmd_e},
 };
 
 #define NR_CMD ARRLEN(cmd_table)

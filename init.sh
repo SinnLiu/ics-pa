@@ -3,19 +3,19 @@
 version=ics2021
 
 function init() {
-  # if [ -d $1 ]; then
-  #   echo "$1 is already initialized, skipping..."
-  #   return
-  # fi
+  if [ -d $1 ]; then
+    echo "$1 is already initialized, skipping..."
+    return
+  fi
 
-  # while [ ! -d $1 ]; do
-  #   git clone -b $version https://github.com/NJU-ProjectN/$1.git
-  # done
-  # log="$1 `cd $1 && git log --oneline --no-abbrev-commit -n1`"$'\n'
-  # rm -rf $1/.git
+  while [ ! -d $1 ]; do
+    git clone -b $version https://github.com/NJU-ProjectN/$1.git
+  done
+  log="$1 `cd $1 && git log --oneline --no-abbrev-commit -n1`"$'\n'
+  rm -rf $1/.git
 
-  # git add -A $1
-  # git commit -am "$1 $version initialized"$'\n\n'"$log"
+  git add -A $1
+  git commit -am "$1 $version initialized"$'\n\n'"$log"
 
   if [ $2 ] ; then
     sed -i -e "/^export $2=.*/d" ~/.bashrc
@@ -41,8 +41,8 @@ function init_no_git() {
   sed -i -e "/^\/$1/d" .gitignore
   echo "/$1" >> .gitignore
 
-  git add -A .gitignore
-  git commit --no-verify --allow-empty -am "$1 $version initialized without tracing"$'\n\n'"$log"
+  # git add -A .gitignore
+  # git commit --no-verify --allow-empty -am "$1 $version initialized without tracing"$'\n\n'"$log"
 }
 
 case $1 in

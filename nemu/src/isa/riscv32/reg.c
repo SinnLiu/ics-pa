@@ -21,5 +21,11 @@ void isa_reg_display() {
 }
 
 word_t isa_reg_str2val(const char *s, bool *success) {
+  // how to find reg name?
+  printf("%s",s);
+  for (int idx = 0 ; idx < 32 ; idx++) {
+    if(strcmp(regs[idx], s) == 0)
+      printf("%d",cpu.gpr[idx]._32);
+  }
   return 0;
 }

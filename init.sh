@@ -5,6 +5,12 @@ version=ics2021
 function init() {
   if [ -d $1 ]; then
     echo "$1 is already initialized, skipping..."
+    sed -i -e "/^export $2=.*/d" ~/.bashrc
+    echo "export $2=`readlink -e $1`" >> ~/.bashrc
+
+    echo "By default this script will add environment variables into ~/.bashrc."
+    echo "After that, please run 'source ~/.bashrc' to let these variables take effect."
+    echo "If you use shell other than bash, please add these environment variables manually."
     return
   fi
 

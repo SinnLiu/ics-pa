@@ -14,6 +14,7 @@ enum {
   TK_MUL = '*',
   TK_DIV = '/',
   TK_HEX,
+  TK_REG,
 };
 
 static struct rule {
@@ -35,6 +36,7 @@ static struct rule {
   {"\\(", '('},
   {"\\)", ')'},
   {"\\b0x[0-9,a-e]+\\b",TK_HEX},
+  {"\\$[0-9,a-z]+",TK_REG}
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -160,7 +162,7 @@ word_t expr(char *e, bool *success) {
   for(int i = 0 ; i < nr_token ; i++) {
     if(!(*success)) break;
     switch(tokens[i].type) {
-      case TK_NUM:
+      case TK_NUM:;
         int temp_num = 0;
         int p_temp_num = 0;
         while(tokens[i].str[p_temp_num] != '\0') {
@@ -168,6 +170,9 @@ word_t expr(char *e, bool *success) {
           p_temp_num++;
         }
         num_array[p_num_array++] = temp_num;
+        break;
+      case TK_REG:;
+        isa_reg_str2val((tokens[i].str+1), success);
         break;
       case '(':
         char_array[p_char_array++] = tokens[i].type;
@@ -197,7 +202,7 @@ word_t expr(char *e, bool *success) {
         }
         char_array[p_char_array++] = tokens[i].type;
         break;
-      case TK_HEX:
+      case TK_HEX:;
         int temp_num_hex = 0;
         int p_temp_num_hex = 2;
         while(tokens[i].str[p_temp_num_hex] != '\0') {

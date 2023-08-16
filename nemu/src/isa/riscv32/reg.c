@@ -22,10 +22,19 @@ void isa_reg_display() {
 
 word_t isa_reg_str2val(const char *s, bool *success) {
   // how to find reg name?
-  printf("%s",s);
+  bool is_find = false;
+  uint32_t reg_value = 0;
   for (int idx = 0 ; idx < 32 ; idx++) {
-    if(strcmp(regs[idx], s) == 0)
-      printf("%d",cpu.gpr[idx]._32);
+    if(strcmp(regs[idx], s) == 0) {
+      is_find = true;
+      reg_value = cpu.gpr[idx]._32;
+    }
+  }
+  if(is_find) {
+    printf("reg %s is %d\r\n",s,reg_value);
+  }
+  else {
+    printf("there is no reg about %s\r\n",s);
   }
   return 0;
 }

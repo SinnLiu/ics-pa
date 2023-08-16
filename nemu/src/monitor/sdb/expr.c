@@ -6,7 +6,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ,
+  TK_NOTYPE = 256, 
   TK_NUM,
   /* TODO: Add more token types */
   TK_PLUS = '+',
@@ -15,6 +15,9 @@ enum {
   TK_DIV = '/',
   TK_HEX,
   TK_REG,
+  TK_AND,
+  TK_NEQ,
+  TK_EQ,
 };
 
 static struct rule {
@@ -29,14 +32,16 @@ static struct rule {
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
   {"-", '-'},         // sub
-  {"==", TK_EQ},        // equal
+  {"\\==", TK_EQ},        // equal
   {"\\b[0-9]+\\b", TK_NUM},
   {"\\*", '*'},       // mul
   {"\\/", '/'},       // div
   {"\\(", '('},
   {"\\)", ')'},
   {"\\b0x[0-9,a-e]+\\b",TK_HEX},
-  {"\\$[0-9,a-z]+",TK_REG}
+  {"\\$[0-9,a-z]+",TK_REG},
+  {"\\&&", TK_AND},
+  {"\\!=", TK_NEQ}
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -123,6 +128,8 @@ int order(char op) {
   if(op == '(') return 0;
   if(op == '+' || op == '-') return 1;
   if(op == '*' || op == '/') return 2;
+  if(op == TK_EQ || op == TK_NEQ) return 3;
+  if(op == TK_AND ) return 4;
   return -1;
 }
 
@@ -138,7 +145,16 @@ bool calculate(int *num_array, int p_num_array, char op) {
     num_array[p_num_array-2] += num_array[p_num_array-1];         
   }
   else if(op == '-') {
-    num_array[p_num_array-2] -= num_array[p_num_array-1];
+      num_array[p_num_array-2] -= num_array[p_num_array-1];
+  }
+  else if(op == TK_AND) {
+    num_array[p_num_array-2] &= num_array[p_num_array-1];
+  }
+  else if(op == TK_EQ) {
+    num_array[p_num_array-2] = (num_array[p_num_array-2] == num_array[p_num_array-1]);
+  }
+  else if(op == TK_NEQ) {
+    num_array[p_num_array-2] = (num_array[p_num_array-2] != num_array[p_num_array-1]);
   }
   return true;
 }
@@ -173,6 +189,7 @@ word_t expr(char *e, bool *success) {
         break;
       case TK_REG:;
         isa_reg_str2val((tokens[i].str+1), success);
+        memset(tokens[i].str, 0, 32);
         break;
       case '(':
         char_array[p_char_array++] = tokens[i].type;
@@ -192,6 +209,10 @@ word_t expr(char *e, bool *success) {
       case '-':
       case '*':
       case '/':
+      case TK_AND:;
+      case TK_EQ:;
+      case TK_NEQ:;
+        if(p_num_array == 0 && '-' == tokens[i].type) {num_array[p_num_array++] = 0;}   //fix case about the begin of "-X"
         while(p_char_array != 0) {
           if(order(char_array[p_char_array-1]) >= order(tokens[i].type)) {
             *success = calculate(num_array,p_num_array,char_array[p_char_array-1]);

@@ -45,7 +45,9 @@ static int cmd_info(char *args) {
   char *arg = strtok(NULL, " ");
   if (arg == NULL) return 0;
   else if (0 == strcmp(arg, "r")) isa_reg_display();
-  else if (0 == strcmp(arg, "w"))  {}
+  else if (0 == strcmp(arg, "w"))  {
+    
+  }
   else printf("Error in cmd input\n");
   return 0;
 }
@@ -72,6 +74,10 @@ static int cmd_e(char *args) {
   return 0;
 }
 
+static int cmd_w(char *args) {
+  return 0;
+}
+
 static struct {
   const char *name;
   const char *description;
@@ -85,6 +91,7 @@ static struct {
   {"info", "Display infomations", cmd_info},
   {"si", "Single step exe", cmd_si},
   {"e", "Express", cmd_e},
+  {"w", "Add watchpoint", cmd_w},
 };
 
 #define NR_CMD ARRLEN(cmd_table)

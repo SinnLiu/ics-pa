@@ -8,6 +8,7 @@ static int is_batch_mode = false;
 
 void init_regex();
 void init_wp_pool();
+void watch_point_display();
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
@@ -46,7 +47,7 @@ static int cmd_info(char *args) {
   if (arg == NULL) return 0;
   else if (0 == strcmp(arg, "r")) isa_reg_display();
   else if (0 == strcmp(arg, "w"))  {
-    
+    watch_point_display();
   }
   else printf("Error in cmd input\n");
   return 0;

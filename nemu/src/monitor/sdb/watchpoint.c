@@ -7,7 +7,7 @@ typedef struct watchpoint {
   struct watchpoint *next;
 
   /* TODO: Add more members if necessary */
-
+  char exps[100];
 } WP;
 
 static WP wp_pool[NR_WP] = {};
@@ -25,6 +25,12 @@ void init_wp_pool() {
 }
 
 /* TODO: Implement the functionality of watchpoint */
+void watch_point_display() {
+    while(head) {
+      printf("%s\r\n", head->exps);
+    }
+}
+
 WP* new_wp() {
   if(free_ == NULL)
     return NULL;

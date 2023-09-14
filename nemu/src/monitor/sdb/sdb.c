@@ -9,7 +9,8 @@ static int is_batch_mode = false;
 void init_regex();
 void init_wp_pool();
 void watch_point_display();
-
+int new_wp(char *e);
+void free_wp(int num);
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
   static char *line_read = NULL;
@@ -63,11 +64,11 @@ static int cmd_si(char *args) {
 }
 
 static int cmd_e(char *args) {
-  // char *arg = strtok(NULL, " ");
+  char *arg = strtok(NULL, " ");
   bool success;
   word_t res = 0;
-  if(args == NULL) printf("Please input the express\n");
-  else res = expr(args, &success);
+  if(arg == NULL) printf("Please input the express\n");
+  else res = expr(arg, &success);
   if(success)
     printf("%d\n",res);
   else
@@ -76,8 +77,20 @@ static int cmd_e(char *args) {
 }
 
 static int cmd_w(char *args) {
+  new_wp(args);
   return 0;
 }
+
+static int cmd_d(char *args) {
+  char *arg = strtok(NULL, " ");
+  if( arg == NULL)
+    printf("PLs input the delete number\r\n");
+  int num;
+  sscanf(arg,"%d",&num);
+  free_wp(num);
+  printf("Delete the %d watchpoint successd\r\n", num);
+  return 0;
+};
 
 static struct {
   const char *name;
@@ -93,6 +106,7 @@ static struct {
   {"si", "Single step exe", cmd_si},
   {"e", "Express", cmd_e},
   {"w", "Add watchpoint", cmd_w},
+  {"d", "delete watchpoint", cmd_d},
 };
 
 #define NR_CMD ARRLEN(cmd_table)

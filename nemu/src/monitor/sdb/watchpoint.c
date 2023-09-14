@@ -26,14 +26,16 @@ void init_wp_pool() {
 
 /* TODO: Implement the functionality of watchpoint */
 void watch_point_display() {
-    while(head) {
-      printf("%s\r\n", head->exps);
-    }
+  WP* pos = head;
+  while(pos) {
+    printf("watchpoint id: %d\texpr: %s\r\n", pos->NO, pos->exps);
+    pos = pos->next;
+  }
 }
 
-WP* new_wp() {
+int new_wp(char *e) {
   if(free_ == NULL)
-    return NULL;
+    return -1;
   WP* pos = NULL;
   // get curren free position
   // inst before head node
@@ -41,14 +43,19 @@ WP* new_wp() {
   free_ = free_->next;
   pos->next = head;
   head = pos;
-  return head;
+  strcpy(head->exps, e);
+  if(head->next == NULL) 
+    head->NO = 0;
+  else
+    head->NO = head->next->NO+1;
+  return 0;
 }
 
-void free_wp(WP *wp) {
+void free_wp(int num) {
   WP* pre = head;
   WP* pos = head;
   while(pos) {
-    if(pos->NO == wp->NO) {
+    if(pos->NO == num) {
       pre->next = pos->next;
       // inst before free head node
       pos->next = free_;
